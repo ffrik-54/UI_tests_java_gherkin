@@ -1,0 +1,217 @@
+plugins {
+    id "java"
+    id "idea"
+    id "org.sonarqube" version "4.3.0.3225"
+}
+
+sonar {
+    properties {
+        property "sonar.organization", "organization"
+        property "sonar.projectKey", "organization_UI_tests_java_gherkin"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.projectName", "UI_tests_java_gherkin"
+        property "sonar.language", "java"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.qualitygate.wait", true
+        property "sonar.qualitygate.timeout", 300
+    }
+}
+
+sourceSets.test.java {
+    srcDirs = ["src/test/java"]
+    include "**/*.java"
+}
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+def cucumberVersion = "7.2.3"
+def appiumVersion = "8.0.0"
+def seleniumVersion = "4.10.0"
+def awsVersion = "2.20.103"
+
+repositories { mavenCentral() }
+dependencies {
+
+    implementation "org.testng:testng:+"
+    implementation fileTree(dir: 'libs', include: '*.jar')
+    implementation "org.seleniumhq.selenium:selenium-server:+"
+    implementation "org.uncommons:reportng:+"
+    implementation 'org.slf4j:slf4j-simple:+'
+    implementation 'org.jsoup:jsoup:1.16.1'
+
+    implementation(platform("software.amazon.awssdk:bom:$awsVersion"))
+    implementation "software.amazon.awssdk:s3:$awsVersion"
+    implementation "software.amazon.awssdk:sqs:$awsVersion"
+    implementation "software.amazon.awssdk:services:$awsVersion"
+    implementation "software.amazon.awssdk:core:$awsVersion"
+    implementation "software.amazon.awssdk:regions:$awsVersion"
+    implementation "software.amazon.awssdk:auth:$awsVersion"
+    implementation "software.amazon.awssdk:sso:$awsVersion"
+    implementation "software.amazon.awssdk:ssooidc:$awsVersion"
+
+    implementation platform('com.amazonaws:aws-java-sdk-bom:+')
+    implementation 'com.amazonaws:aws-java-sdk-sqs:+'
+
+    testImplementation "io.cucumber:cucumber-java:$cucumberVersion"
+    testImplementation "io.cucumber:cucumber-java8:$cucumberVersion"
+    testImplementation "io.cucumber:cucumber-junit:$cucumberVersion"
+    testImplementation "io.cucumber:cucumber-picocontainer:$cucumberVersion"
+
+    testImplementation "io.appium:java-client:$appiumVersion"
+    testImplementation "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
+
+    testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+
+
+def setUpGradleProperties() {
+    def localprops = new Properties()
+    def defaultprops = new Properties()
+    def localpropertyfile = "local.properties"
+    def defaultpropertyfile = "gradle.properties"
+
+    if (project.file(localpropertyfile).exists())
+        file(localpropertyfile).withInputStream { localprops.load(it) }
+
+    if (project.file(defaultpropertyfile).exists())
+        file(defaultpropertyfile).withInputStream { defaultprops.load(it) }
+    if ((headless == defaultprops.getProperty("headless")) && (project.file(localpropertyfile).exists()))
+        headless = localprops.getProperty("headless")
+    if ((env == defaultprops.getProperty("env")) && (project.file(localpropertyfile).exists()))
+        env = localprops.getProperty("env")
+    if ((preview_env == defaultprops.getProperty("preview_env")) && (project.file(localpropertyfile).exists()))
+        preview_env = localprops.getProperty("preview_env")
+    if ((buildtype == defaultprops.getProperty("buildtype")) && (project.file(localpropertyfile).exists()))
+    if ((order_provider == defaultprops.getProperty("order_provider")) && (project.file(localpropertyfile).exists()))
+        order_provider = localprops.getProperty("order_provider")
+    if ((protocol == defaultprops.getProperty("protocol")) && (project.file(localpropertyfile).exists()))
+        protocol = localprops.getProperty("protocol")
+    if ((language == defaultprops.getProperty("language")) && (project.file(localpropertyfile).exists()))
+        language = localprops.getProperty("language")
+    if ((country == defaultprops.getProperty("country")) && (project.file(localpropertyfile).exists()))
+        country = localprops.getProperty("country")
+    if ((proxy == defaultprops.getProperty("proxy")) && (project.file(localpropertyfile).exists()))
+        proxy = localprops.getProperty("proxy")
+    if ((mobile_type == defaultprops.getProperty("mobile_type")) && (project.file(localpropertyfile).exists()))
+        mobile_type = localprops.getProperty("mobile_type")
+    if ((browserstack_username == defaultprops.getProperty("browserstack_username")) && (project.file(localpropertyfile).exists()))
+        browserstack_username = localprops.getProperty("browserstack_username")
+    if ((browserstack_automate_key == defaultprops.getProperty("browserstack_automate_key")) && (project.file(localpropertyfile).exists()))
+        browserstack_automate_key = localprops.getProperty("browserstack_automate_key")
+    if ((browserstack_url_app == defaultprops.getProperty("browserstack_url_app")) && (project.file(localpropertyfile).exists()))
+        browserstack_url_app = localprops.getProperty("browserstack_url_app")
+    if ((browserstack_app_id == defaultprops.getProperty("browserstack_app_id")) && (project.file(localpropertyfile).exists()))
+        browserstack_app_id = localprops.getProperty("browserstack_app_id")
+    if ((saucelabs_url_app == defaultprops.getProperty("saucelabs_url_app")) && (project.file(localpropertyfile).exists()))
+        saucelabs_url_app = localprops.getProperty("saucelabs_url_app")
+    if ((saucelabs_app == defaultprops.getProperty("saucelabs_app")) && (project.file(localpropertyfile).exists()))
+        saucelabs_app = localprops.getProperty("saucelabs_app")
+    if ((local_ipad_app_path == defaultprops.getProperty("local_ipad_app_path")) && (project.file(localpropertyfile).exists()))
+        local_ipad_app_path = localprops.getProperty("local_ipad_app_path")
+    if ((local_ipad_ipa_path == defaultprops.getProperty("local_ipad_ipa_path")) && (project.file(localpropertyfile).exists()))
+        local_ipad_ipa_path = localprops.getProperty("local_ipad_ipa_path")
+    if ((local_device_file == defaultprops.getProperty("local_device_file")) && (project.file(localpropertyfile).exists()))
+        local_device_file = localprops.getProperty("local_device_file")
+    if ((web_browser_type == defaultprops.getProperty("web_browser_type")) && (project.file(localpropertyfile).exists()))
+        web_browser_type = localprops.getProperty("web_browser_type")
+    if ((web_browser_cloudprovider == defaultprops.getProperty("web_browser_cloudprovider")) && (project.file(localpropertyfile).exists()))
+        web_browser_cloudprovider = localprops.getProperty("web_browser_cloudprovider")
+    if ((browserstack_url_web == defaultprops.getProperty("browserstack_url_web")) && (project.file(localpropertyfile).exists()))
+        browserstack_url_web = localprops.getProperty("browserstack_url_web")
+    if ((web_Firefox_driver_path == defaultprops.getProperty("web_Firefox_driver_path")) && (project.file(localpropertyfile).exists()))
+        web_Firefox_driver_path = localprops.getProperty("web_Firefox_driver_path")
+    if ((web_Chrome_driver_path == defaultprops.getProperty("web_Chrome_driver_path")) && (project.file(localpropertyfile).exists()))
+        web_Chrome_driver_path = localprops.getProperty("web_Chrome_driver_path")
+    if ((web_Safari_driver_path == defaultprops.getProperty("web_Safari_driver_path")) && (project.file(localpropertyfile).exists()))
+        web_Safari_driver_path = localprops.getProperty("web_Safari_driver_path")
+    if ((ipa_package_name == defaultprops.getProperty("ipa_package_name")) && (project.file(localpropertyfile).exists()))
+        ipa_package_name = localprops.getProperty("ipa_package_name")
+    if ((appium_server_url == defaultprops.getProperty("appium_server_url")) && (project.file(localpropertyfile).exists()))
+        appium_server_url = localprops.getProperty("appium_server_url")
+    if ((mobiles_farm_app_path == defaultprops.getProperty("mobiles_farm_app_path")) && (project.file(localpropertyfile).exists()))
+        mobiles_farm_app_path = localprops.getProperty("mobiles_farm_app_path")
+}
+
+setUpGradleProperties()
+
+task cucumberTests() {
+    dependsOn assemble, testClasses
+
+    def tags = project.hasProperty("tags") ? project.getProperty("tags") : ''
+    def feature = project.hasProperty("feature") ? project.getProperty("feature") : ''
+    def rerunFailed = project.hasProperty("rerunFailed") ? project.getProperty("rerunFailed") : ''
+
+    doLast {
+
+        javaexec {
+
+            systemProperty "headless", headless
+            systemProperty "env", env
+            systemProperty "preview_env", preview_env
+            systemProperty "buildtype", buildtype
+            systemProperty "storeqa", storeqa
+            systemProperty "storeqadata", storeqadata
+            systemProperty "order_provider", order_provider
+            systemProperty "protocol", protocol
+            systemProperty "language", language
+            systemProperty "country", country
+            systemProperty "proxy", proxy
+            systemProperty "protocol", protocol
+            systemProperty "mobile_type", mobile_type
+            systemProperty "browserstack_username", browserstack_username
+            systemProperty "browserstack_automate_key", browserstack_automate_key
+            systemProperty "browserstack_url_app", browserstack_url_app
+            systemProperty "browserstack_app_id", browserstack_app_id
+            systemProperty "saucelabs_url_app", saucelabs_url_app
+            systemProperty "saucelabs_app", saucelabs_app
+            systemProperty "local_ipad_app_path", local_ipad_app_path
+            systemProperty "local_ipad_ipa_path", local_ipad_ipa_path
+            systemProperty "local_device_file", local_device_file
+            systemProperty "web_browser_type", web_browser_type
+            systemProperty "web_browser_cloudprovider", web_browser_cloudprovider
+            systemProperty "browserstack_url_web", browserstack_url_web
+            systemProperty "web_Firefox_driver_path", web_Firefox_driver_path
+            systemProperty "web_Chrome_driver_path", web_Chrome_driver_path
+            systemProperty "web_Safari_driver_path", web_Safari_driver_path
+            systemProperty "ipa_package_name", ipa_package_name
+            systemProperty "appium_server_url", appium_server_url
+            systemProperty "mobiles_farm_app_path", mobiles_farm_app_path
+            if (rerunFailed != '') {
+                main = "io.cucumber.core.cli.Main"
+                classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+                args = [
+                        '--plugin', 'pretty',
+                        '--plugin', 'html:target/cucumber-report-' + web_browser_type + '-' + new Date().format("yyyy-MM-dd'T'HHmmss") + '-RERUN.html',
+                        '--plugin', 'junit:target/junit-reports/Cucumber-' + web_browser_type + '.xml',
+                        '--glue', 'com.steps',
+                        '@' + rerunFailed,
+                ]
+            } else {
+                main = "io.cucumber.core.cli.Main"
+                classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+                args = [
+                        '--plugin', 'pretty',
+                        '--plugin', 'html:target/cucumber-report-' + web_browser_type + '-' + new Date().format("yyyy-MM-dd'T'HHmmss") + '.html',
+                        '--plugin', 'junit:target/junit-reports/Cucumber-' + web_browser_type + '.xml',
+                        '--plugin', 'rerun:target/rerun.txt',
+                        '--glue', 'com.steps',
+                        '--tags', tags,
+                        'src/test/java/com/tests/features/' + feature]
+            }
+
+        }
+
+    }
+}
