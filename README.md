@@ -5,7 +5,7 @@ This framework is configured ton be used directly on Eclipse
 1. Install Eclipse Java with TestNG and Cucumber modules/plugins.
 
 2. Import the project from
-   Git -> [Tiller_UI-Tests](https://github.com/tillersystems/Tiller_UI-Tests/pull/214/files#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5 "Expand All")
+   Git
 
 3. Install the Lombok plugin: The installation process may vary depending on your IDE, but you can
    usually find the plugin by searching for "Lombok" in the plugin repository of your IDE. For the
