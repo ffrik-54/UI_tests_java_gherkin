@@ -201,11 +201,11 @@ F --> K[Tests Execution]
 - Tap on Play button on the Feature level to run all the feature.
 - Tap on Play button on the Scenario level to run one scenario.
 
-![cucumber_runner.png](img%2Fcucumber_runner.png)
+![cucumber_runner.png](img/cucumber_runner.png)
 
 * We can also launch a debug test with breakpoints.
 
-![cucumber_plugin.png](img%2Fcucumber_plugin.png)
+![cucumber_plugin.png](img/cucumber_plugin.png)
 
 # Cucumber Tests launch with gradle:
 
