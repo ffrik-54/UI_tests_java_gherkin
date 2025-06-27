@@ -1,5 +1,9 @@
 package com.utils;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,8 +13,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.stream.XMLStreamException;
-import lombok.Getter;
 
 /**
  * Config path to data path to string environments if necessary platforms if necessary compilation flags
@@ -63,17 +65,6 @@ public class Config {
     private static final String dataAuthUrlTokenPath = "./res/data/*/Data_api.json";
 
     private static final String dataEnvPath = "./res/data/*/Data.json";
-
-    @Getter
-    private static final String dataRawTicketPath = "./res/data/Data_rawticket.json";
-
-    private static final String dataUnifiedCatalog = "./res/data/Data_unified_catalog.json";
-
-    @Getter
-    private static final String dataEventPath = "./res/data/Data_event.json";
-
-    @Getter
-    private static final String dataOMSEventPath = "./res/data/Data_oms_event.json";
 
     @Getter
     private static final String dataStorePath = "./res/data/XX/*/Data.json";
@@ -152,6 +143,10 @@ public class Config {
     @Getter
     private static String url = null;
 
+    @Setter
+    @Getter
+    private static String webUrl = null;
+
     @Getter
     private static String appiumServerUrl = null;
 
@@ -193,10 +188,6 @@ public class Config {
         return dataEnvPath.replace("*", Config.getEnv());
     }
 
-    public static String getUnifiedCatalogPath() {
-        return dataUnifiedCatalog;
-    }
-
     public static String getStringPath() {
         return stringPath.replace("XX", language.substring(0, 2));
     }
@@ -208,8 +199,6 @@ public class Config {
         Logger.getGlobal().log(Level.INFO, "buildType: {0}", buildType);
         headless = loadProperty("headless");
         Logger.getGlobal().log(Level.INFO, "headless: {0}", headless);
-        orderProvider = loadProperty("order_provider");
-        Logger.getGlobal().log(Level.INFO, "order_file: {0}", orderProvider);
         protocol = loadProperty("protocol");
         Logger.getGlobal().log(Level.INFO, "protocol: {0}", protocol);
         preview_env = loadProperty("preview_env");

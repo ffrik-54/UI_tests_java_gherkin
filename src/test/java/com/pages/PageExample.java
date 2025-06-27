@@ -1,4 +1,4 @@
-package com.pages.mobile;
+package com.pages;
 
 import com.utils.Config;
 import org.openqa.selenium.By;
@@ -24,7 +24,7 @@ public class PageExample {
             if (index != 0) {
                 result = By.xpath("(//*[@name='" + id + "'])[" + index + "]");
             } else {
-                result = By.xpath("//*[@name='" + id + "']");
+                result = By.xpath("//*[@id='" + id + "']");
             }
         }
         return result;

@@ -25,6 +25,10 @@ sourceSets.test.java {
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-Xlint:deprecation']
+}
+
 def cucumberVersion = "7.2.3"
 def appiumVersion = "8.0.0"
 def seleniumVersion = "4.10.0"
@@ -161,8 +165,6 @@ task cucumberTests() {
             systemProperty "env", env
             systemProperty "preview_env", preview_env
             systemProperty "buildtype", buildtype
-            systemProperty "storeqa", storeqa
-            systemProperty "storeqadata", storeqadata
             systemProperty "order_provider", order_provider
             systemProperty "protocol", protocol
             systemProperty "language", language
@@ -208,7 +210,7 @@ task cucumberTests() {
                         '--plugin', 'rerun:target/rerun.txt',
                         '--glue', 'com.steps',
                         '--tags', tags,
-                        'src/test/java/com/tests/features/' + feature]
+                        'src/test/java/com/features/' + feature]
             }
 
         }

@@ -1,7 +1,6 @@
 package com.utils;
 
 import com.contexts.TestContext;
-import com.steps.BaseStep;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -15,18 +14,12 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.grid.config.ConfigException;
-import org.openqa.selenium.html5.LocalStorage;
-import org.openqa.selenium.html5.WebStorage;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteExecuteMethod;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.html5.RemoteWebStorage;
 import org.openqa.selenium.safari.SafariDriver;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -48,27 +41,6 @@ public class DriverManager {
 
     public DriverManager(TestContext context) {
         this.testContext = context;
-    }
-
-    public static void killSafariDriver() {
-        String s;
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec("if pgrep -x \"safaridriver\" > /dev/null then killall safaridriver");
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while ((s = br.readLine()) != null) {
-                Logger.getGlobal().log(Level.INFO, "line: " + s);
-            }
-            p.waitFor();
-            Logger.getGlobal().log(Level.INFO, "exit: " + p.exitValue());
-            p.destroy();
-        } catch (InterruptedException e) {
-            Logger.getGlobal().log(Level.SEVERE, "Error killing Safari driver : Interrupted!", e.getMessage());
-            // Restore interrupted state...
-            Thread.currentThread().interrupt();
-        } catch (Exception e) {
-            Logger.getGlobal().log(Level.SEVERE, "Error killing Safari driver: ", e.getMessage());
-        }
     }
 
     public WebDriver getDriver() {
@@ -93,12 +65,11 @@ public class DriverManager {
 
     public void setUpDrivers(int nbMobileDriver, String url) throws XMLStreamException, IOException {
 
-        setUrl(url);
         if (testContext.isWebTest()) {
             if (testContext.getDriverManager().getDriver() == null) {
                 setUpWebDriver();
             } else {
-                testContext.getDriverManager().getDriver().get(testContext.getBaseUrl());
+                testContext.getDriverManager().getDriver().get(Config.getWebUrl());
             }
             setDefaultCookies(webDriver);
             webDriver.navigate().refresh();
@@ -109,10 +80,7 @@ public class DriverManager {
     }
 
     public void setUpWebDriver() throws XMLStreamException, MalformedURLException {
-        String url = testContext.getBaseUrl();
-        if (!url.contains("client_id")) {
-            url += Json.get("data_resource_login");
-        }
+        String url = Config.getWebUrl();
         setUpWebDriver(url, null);
     }
 
@@ -133,7 +101,6 @@ public class DriverManager {
 
         configWebDriver(webDriver, url, dimension);
 
-        clearLocalStorageBrowserStack();
     }
 
     public void setUpWebDriverLocal(String url, Dimension dimension) {
@@ -151,10 +118,6 @@ public class DriverManager {
 
         configWebDriver(webDriver, url, dimension);
 
-        // TODO Find a way to clear local Storage Safari
-        if (!Config.isWebBrowserSafari()) {
-            clearLocalStorage();
-        }
     }
 
     public void setUpMobileDrivers(int nbDriver) throws XMLStreamException, IOException {
@@ -169,14 +132,14 @@ public class DriverManager {
 
         nbDriver -= iosDrivers.size();
         for (int i = 0; i < nbDriver; i++) {
-            if (!BaseStep.isNullOrEmpty(Config.getConfigFiles().get(i))) {
+            if (!StringUtils.isNullOrEmpty(Config.getConfigFiles().get(i))) {
                 configFile = Config.getConfigFiles().get(i); // get the config file to determine the driver properties
             } else {
                 configFile = "";
             }
 
             if (configFile.contains("local")) {
-                if (BaseStep.isNullOrEmpty(Config.getIpaPath())) {
+                if (StringUtils.isNullOrEmpty(Config.getIpaPath())) {
                     throw new ConfigException("Missing property IPA path");
                 } else {
                     Logger.getGlobal().log(Level.INFO, "Mobile driver: {0} : Local", i);
@@ -184,7 +147,7 @@ public class DriverManager {
                     continue;
                 }
             } else if (configFile.contains("simulator")) {
-                if (BaseStep.isNullOrEmpty(Config.getAppPath())) {
+                if (StringUtils.isNullOrEmpty(Config.getAppPath())) {
                     throw new ConfigException("Missing property APP path");
                 } else {
                     // we have a path app for the simulator available -> use simulator for the
@@ -194,7 +157,7 @@ public class DriverManager {
                     continue;
                 }
             } else if (configFile.contains("browserstack")) {
-                if (BaseStep.isNullOrEmpty(Config.getAppIdBrowserstack())) {
+                if (StringUtils.isNullOrEmpty(Config.getAppIdBrowserstack())) {
                     throw new ConfigException("Missing property Browserstack APP ID");
                 } else {
                     // we have browserstack available -> use browserstack for the current driver
@@ -203,7 +166,7 @@ public class DriverManager {
                     continue;
                 }
             } else if (configFile.contains("saucelabs")) {
-                if (BaseStep.isNullOrEmpty(Config.getAppIdSaucelabs())) {
+                if (StringUtils.isNullOrEmpty(Config.getAppIdSaucelabs())) {
                     throw new ConfigException("Missing property SauceLabs APP ID");
                 } else {
                     // we have saucelabs available -> use saucelabs for the current driver
@@ -212,7 +175,7 @@ public class DriverManager {
                     continue;
                 }
             } else if (configFile.contains("mobiles_farm")) {
-                if (BaseStep.isNullOrEmpty(Config.getDeviceFarmAppPath())) {
+                if (StringUtils.isNullOrEmpty(Config.getDeviceFarmAppPath())) {
                     throw new ConfigException("Missing property mobiles farm IPA path");
                 } else {
                     Logger.getGlobal().log(Level.INFO, "Mobile driver: {0} : Mobiles Farm", i);
@@ -234,9 +197,6 @@ public class DriverManager {
         }
 
         if (url != null) {
-            if (url.contains(Json.get("data_resource_login"))) {
-                url += "?lng=" + Config.getLanguage();
-            }
             Logger.getGlobal().log(Level.INFO, "web url : {0}", url);
             driver.get(url);
             setDefaultCookies(driver);
@@ -382,7 +342,7 @@ public class DriverManager {
                 .setAutoAcceptAlerts(true).setCommandTimeouts(Duration.ofSeconds(800));
 
         String url;
-        if (BaseStep.isNullOrEmpty(Config.getUrl())) {
+        if (StringUtils.isNullOrEmpty(Config.getUrl())) {
             url = Config.getAppiumServerUrl();
         } else {
             Logger.getGlobal().log(Level.INFO, "systemPort: {0}", Json.getFromString(config, "systemPort"));
@@ -410,59 +370,6 @@ public class DriverManager {
                         "browserstack_automate_key") + Config.loadProperty("browserstack_url_web")), caps);
     }
 
-    public void clearLocalStorageBrowserStack() {
-        RemoteExecuteMethod executeMethod = new RemoteExecuteMethod((RemoteWebDriver) webDriver);
-        RemoteWebStorage webStorage = new RemoteWebStorage(executeMethod);
-        LocalStorage storage = webStorage.getLocalStorage();
-
-        String keyPersist = "persist:onboarding";
-        String value = "{\"accounting_report\":\"true\"," + "\"accounting_report_hint\":\"true\","
-                + "\"current_tills_report\":\"true\"," + "\"current_tills_report_hint\":\"true\","
-                + "\"current_tills_report_modal\":\"true\"," + "\"dashboard\":\"true\"," + "\"dashboard_hint\":\"true\","
-                + "\"dashboard_modal\":\"true\"," + "\"orders_report\":\"true\"," + "\"orders_report_hint\":\"true\","
-                + "\"product_sales_report\":\"true\"," + "\"product_sales_report_hint\":\"true\","
-                + "\"reports__new\":\"true\"," + "\"reports__settings__hint\":\"true\","
-                + "\"service_report_hint\":\"true\"," + "\"tills_report\":\"true\"," + "\"tills_report_hint\":\"true\","
-                + "\"_persist\":\"{\"version\":-1,\"rehydrated\":true}\"}";
-
-        storage.setItem(keyPersist, value);
-
-        webDriver.navigate().refresh();
-    }
-
-    public void clearLocalStorage() {
-        LocalStorage local = ((WebStorage) webDriver).getLocalStorage();
-
-        String keyPersist = "persist:onboarding";
-        String value = "{\"accounting_report\":\"true\"," + "\"accounting_report_hint\":\"true\","
-                + "\"current_tills_report\":\"true\"," + "\"current_tills_report_hint\":\"true\","
-                + "\"current_tills_report_modal\":\"true\"," + "\"dashboard\":\"true\"," + "\"dashboard_hint\":\"true\","
-                + "\"dashboard_modal\":\"true\"," + "\"orders_report\":\"true\"," + "\"orders_report_hint\":\"true\","
-                + "\"product_sales_report\":\"true\"," + "\"product_sales_report_hint\":\"true\","
-                + "\"reports__new\":\"true\"," + "\"reports__settings__hint\":\"true\","
-                + "\"service_report_hint\":\"true\"," + "\"tills_report\":\"true\"," + "\"tills_report_hint\":\"true\","
-                + "\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}";
-
-        Logger.getGlobal().log(Level.INFO, "Persist values:", value);
-        local.setItem(keyPersist, value);
-        webDriver.navigate().refresh();
-
-    }
-
-    public void setUrl(String url) {
-        String env_prefix = null;
-        String url_suffix = null;
-        if (Config.getPreview_env() == null || Config.getPreview_env().isEmpty()) {
-            env_prefix = Json.get("env_url_prefix");
-            url_suffix = "tillersystems.com";
-        } else {
-            env_prefix = Config.getPreview_env();
-            url_suffix = "tiller.systems";
-        }
-        testContext.setBaseUrl(
-                url.replace("ENV", env_prefix).replace("PROTOCOL", Config.getProtocol()).replace("URL_SUFFIX", url_suffix));
-        Logger.getGlobal().log(Level.INFO, "Set Base url : {0}", testContext.getBaseUrl());
-    }
 
     public AppiumDriver setUpMobileDriverSaucelabs(int index) throws XMLStreamException, IOException {
         // Get the configuration driver from the config file given in the
@@ -490,11 +397,11 @@ public class DriverManager {
         sauceOptions.setCapability("appium:project", "Tiller POS");
         sauceOptions.setCapability("build", Config.getBuildType() + " - " + Config.getBuildDate());
         sauceOptions.setCapability("name", testContext.getTestName());
-        sauceOptions.setCapability("cacheId", Config.getCacheId());
+        //sauceOptions.setCapability("cacheId", Config.getCacheId());
         sauceOptions.setCapability("appiumVersion", "2.0.0");
         Logger.getGlobal()
                 .log(Level.INFO, "build name used: {0}", Config.getBuildType() + " - " + Config.getBuildDate());
-        Logger.getGlobal().log(Level.INFO, "cacheId used: {0}", Config.getCacheId());
+        //Logger.getGlobal().log(Level.INFO, "cacheId used: {0}", Config.getCacheId());
 
         // Set timeout to 900secs (60secs by default)
         sauceOptions.setCapability("appium:newCommandTimeout", 900);
@@ -528,7 +435,7 @@ public class DriverManager {
                 .setAutoAcceptAlerts(true).setCommandTimeouts(Duration.ofSeconds(800));
 
         String url = null;
-        if (BaseStep.isNullOrEmpty(Config.getUrl())) {
+        if (StringUtils.isNullOrEmpty(Config.getUrl())) {
             url = Config.getAppiumServerUrl();
         }
         Logger.getGlobal().log(Level.INFO, "Appium url: {0}", url);
@@ -602,7 +509,7 @@ public class DriverManager {
         return new IOSDriver(new URL(url), caps);
     }
 
-    public void takeSnapshot() throws IOException {
+    /*public void takeSnapshot() throws IOException {
         // take final snapshot
         String name;
         if (testContext.getTestName() != null && !getClass().getName().equals(testContext.getTestName())) {
@@ -618,11 +525,11 @@ public class DriverManager {
             }
             if (testContext.isMobileTest()) {
                 for (AppiumDriver appiumDriver : iosDrivers) {
-                    BaseStep.takeSnapShot(appiumDriver, "./snapshots/" + name + "_IPAD.png");
+                    BaseStep.takeSnapShot(appiumDriver, "./snapshots/" + name + "_Mobile.png");
                 }
             }
         } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, e.toString());
         }
-    }
+    }*/
 }

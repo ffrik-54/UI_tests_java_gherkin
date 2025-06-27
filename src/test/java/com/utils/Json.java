@@ -2,18 +2,14 @@ package com.utils;
 
 import com.contexts.TestContext;
 import com.google.common.base.Charsets;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import com.google.gson.*;
+import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,11 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 public class Json {
 
@@ -67,33 +58,15 @@ public class Json {
             return "";
         }
 
-        String storeName = testContext.getScenarioContext().getStores().get(0).getStoreName();
-
         if (index.startsWith("string_")) {
             path = Config.getStringPath();
-        } else if (index.startsWith("store_")) {
-            if (storeName != null) {
-                path = Config.getDataStorePath().replace("XX", Config.getEnv()).replace("*", storeName);
-            } else {
-                throw new NullPointerException("current store not set");
-            }
         } else if (index.startsWith("api_")) {
             path = Config.getDataApiPath();
         } else if (index.startsWith("url_") || index.startsWith("auth_") || index.startsWith("token_")) {
             path = Config.getDataAuthUrlTokenPath();
         } else if (index.startsWith("env_")) {
             path = Config.getDataEnvPath();
-        } else if (index.startsWith("raw_")) {
-            path = Config.getDataRawTicketPath();
-        } else if (index.startsWith("event_")) {
-            path = Config.getDataEventPath();
-        } else if (index.startsWith("oms_event_")) {
-            path = Config.getDataOMSEventPath();
-        } else if (index.startsWith("flag_")) {
-            path = Config.getFlagPath();
-        } else if (index.startsWith("unified_catalog")) {
-            path = Config.getUnifiedCatalogPath();
-        } else {
+        }  else {
             path = Config.getDataPath();
         }
 
@@ -103,23 +76,6 @@ public class Json {
             JSONObject jsonObject = (JSONObject) obj;
 
             String result = (String) jsonObject.get(index);
-
-            if (result == null && index.startsWith("store_")) {
-                if (storeName != null) {
-                    path = storeName.startsWith("storeqadata") ? path.replace(storeName, "storeqadata")
-                        : path.replace(storeName, "storeqa");
-                } else {
-                    throw new NullPointerException("current store not set");
-                }
-
-                obj = parser.parse(new FileReader(path));
-                jsonObject = (JSONObject) obj;
-                result = (String) jsonObject.get(index);
-            }
-            if ((result != null) && (index.startsWith("path_"))) {
-                assert storeName != null;
-                result = result.replace("*", storeName);
-            }
 
             return result;
         } catch (Exception e) {

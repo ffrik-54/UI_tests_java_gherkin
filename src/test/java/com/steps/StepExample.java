@@ -1,36 +1,25 @@
 package com.steps;
 
-import static org.testng.Assert.assertTrue;
-
 import com.contexts.TestContext;
-import com.pages.bo.BOSonarMainPage;
-import com.pages.bo.BOSonarReportsEnum;
-import com.steps.BaseStep;
 import com.utils.Config;
-import com.utils.DateParser;
-import com.utils.Json;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
 
 /**
  * Base step
  *
  * @author ffrik
  */
-public abstract class StepExample extends BaseStep {
+public abstract class StepExample {
 
     TestContext testContext;
 
@@ -112,22 +101,7 @@ public abstract class StepExample extends BaseStep {
         return rows.size();
     }
 
-    /**
-     * Switch Button to Enable or Disable it
-     *
-     * @param idText     the locator used to filter the checkbox in idClick
-     * @param idClick    the locator for the checkbox to swicth
-     * @param idCheckbox the locator for the hide checkbox to check the actual state.
-     * @param text       to filter id_click list elements, remove if the corresponding id_text index does not contain
-     *                   this text
-     * @param state      true to enable and false to disable.
-     **/
-    public static void switchButton(WebDriver driver, By idText, By idClick, By idCheckbox, String text,
-        boolean state) {
 
-        switchButton(selectElement(driver, idText, idClick, text, false).get(0),
-            selectElement(driver, idText, idCheckbox, text, false).get(0), state);
-    }
 
     /**
      * Switch Button to Enable or Disable it
@@ -142,20 +116,6 @@ public abstract class StepExample extends BaseStep {
             elementClick.click();
         }
     }
-
-    /**
-     * Select checkbox Button to Enable or Disable it
-     *
-     * @param idCheckBox the checkbox.
-     * @param state      true to enable and false to disable.
-     **/
-    public static void selectCheckbox(WebDriver driver, By idCheckBox, boolean state) {
-
-        if (state != checkElement(driver, idCheckBox).isSelected()) {
-            selectElement(driver, idCheckBox);
-        }
-    }
-
 
     /**
      * To use when normal scroll and click isn't working properly
