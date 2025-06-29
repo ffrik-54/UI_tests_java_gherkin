@@ -1,0 +1,22 @@
+{
+	"capabilities": [
+		{
+			"deviceName": "iPad 8th",
+			"browserName": "Safari",
+			"version": "14",
+			"maxInstances": 2,
+			"automationName": "XCUITest",
+			"platform": "iOS"
+		}
+	],
+	"configuration": {
+		"cleanUpCycle": 3000,
+		"timeout": 30000,
+		"proxy": "org.openqa.grid.selenium.proxy.DefaultRemoteProxy",
+		"maxSession": 2,
+		"register": true,
+		"registerCycle": 5000,
+		"hubPort": 4444,
+		"hubHost": "169.254.196.225"
+	}
+}
