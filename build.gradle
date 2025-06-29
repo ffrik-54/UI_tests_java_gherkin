@@ -98,8 +98,6 @@ def setUpGradleProperties() {
     if ((preview_env == defaultprops.getProperty("preview_env")) && (project.file(localpropertyfile).exists()))
         preview_env = localprops.getProperty("preview_env")
     if ((buildtype == defaultprops.getProperty("buildtype")) && (project.file(localpropertyfile).exists()))
-    if ((order_provider == defaultprops.getProperty("order_provider")) && (project.file(localpropertyfile).exists()))
-        order_provider = localprops.getProperty("order_provider")
     if ((protocol == defaultprops.getProperty("protocol")) && (project.file(localpropertyfile).exists()))
         protocol = localprops.getProperty("protocol")
     if ((language == defaultprops.getProperty("language")) && (project.file(localpropertyfile).exists()))
@@ -165,7 +163,6 @@ task cucumberTests() {
             systemProperty "env", env
             systemProperty "preview_env", preview_env
             systemProperty "buildtype", buildtype
-            systemProperty "order_provider", order_provider
             systemProperty "protocol", protocol
             systemProperty "language", language
             systemProperty "country", country

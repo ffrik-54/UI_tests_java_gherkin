@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Mother Class to define the the Driver thread for the iPad and the Queue.
  *
- * @author pierredesporte
+ * @author ffrik-54
  */
 
 public abstract class DriverThread extends Thread {

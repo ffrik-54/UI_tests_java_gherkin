@@ -49,12 +49,6 @@ Then do not forget to commit, push and create the PR for the updated gradle.prop
 
 - `environment` -> name of the Environment (prod, preprod)
 
-- `storeqa`-> Default store to launch the tests.
-
-- `storeqadata` -> Default store to launch the data consistency tests.
-
-- `order_provider`-> Path of the order file (`./orders/*/order_simple.json`).
-
 - `protocol`-> Protocole used (`https`)
 
 - `language` -> Language to set the Driver (`en`)
@@ -81,8 +75,7 @@ Then do not forget to commit, push and create the PR for the updated gradle.prop
 
 ## Local Device configuration :
 
-Create a device config Json File with
-the [Documentation](https://tillersystems.atlassian.net/wiki/spaces/TSR/pages/3088613377/Device+Config+File)
+Create a device config Json File
 
 Device :
 
@@ -106,8 +99,7 @@ On the file local/gradle.properties :
 
 - `browserstack_app_id`-> Browserstack App ID (to update when upload new version)
 
-Create a device config Json File with
-the [Documentation](https://sumupteam.atlassian.net/wiki/spaces/HQInternalreferential/pages/15691777099/Browserstack+Devices+Config+File)
+Create a device config Json File
 
 - `device_name` -> Name of the iOs Device.
 
@@ -139,8 +131,7 @@ On the file local/gradle.properties :
 
 - `saucelabs_app`-> SauceLabs App ID (to update when upload new version)
 
-Create a device config Json File with
-the [Documentation](https://sumupteam.atlassian.net/wiki/spaces/HQInternalreferential/pages/21962883095/SauceLabs+Devices+Config+File)
+Create a device config Json File
 
 - `device_name` -> Name of the iOs Device.
 
@@ -152,10 +143,8 @@ the [Documentation](https://sumupteam.atlassian.net/wiki/spaces/HQInternalrefere
 
 <summary>Default Values</summary>
 
-saucelabs_url_app=https://oauth-florian.guilbert-7a7d3:08
-b5694f-5d71-4833-9af7-c21d2164d2a6@ondemand.eu-central-1.saucelabs.com:443/wd/hub
-
-saucelabs_app=storage:aeda966d-b78f-4dff-b1db-0623252dad7c
+saucelabs_url_app=
+saucelabs_app=
 
 buildtype=LOCAL_TESTS
 
@@ -192,8 +181,6 @@ D -->|No| F
 E(Device Farm device creation) --> F((Drivers Created))
 F --> K[Tests Execution]
 ```
-
-![alt text](https://mermaid.ink/img/eyJjb2RlIjoiZ3JhcGggTFJcbkFbR3JhZGxlIFByb3BlcnRpZXNdIC0tPiBCe0xvY2FsIENvbmZpZyBGaWxlfVxuQiAtLT58WWVzfCBDXG5CIC0tPnxOb3wgRVxuQyhMb2NhbCBkZXZpY2VzIGNyZWF0aW9uKSAtLT4gRHtNb2JpbGUgQ2xvdWR9XG5EIC0tPnxZZXN8IEVcbkQgLS0-fE5vfCBGXG5FKEJyb3dzZXJzdGFjayBkZXZpY2UgY3JlYXRpb24pIC0tPiBGKChEcml2ZXJzIENyZWF0ZWQpKVxuRiAtLT4gS1tUZXN0cyBFeGVjdXRpb25dIiwibWVybWFpZCI6eyJ0aGVtZSI6ImRlZmF1bHQifSwidXBkYXRlRWRpdG9yIjpmYWxzZSwiYXV0b1N5bmMiOnRydWUsInVwZGF0ZURpYWdyYW0iOmZhbHNlfQ)
 
 # Tests launch with IntelliJ with Cucumber plugin:
 

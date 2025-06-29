@@ -394,7 +394,7 @@ public class DriverManager {
         sauceOptions.setCapability("appium:language", Config.loadProperty("language"));
         sauceOptions.setCapability("appium:locale", Config.loadProperty("country"));
         sauceOptions.setCapability("appium:orientation", Json.getFromString(config, "orientation"));
-        sauceOptions.setCapability("appium:project", "Tiller POS");
+        sauceOptions.setCapability("appium:project", "TF1+");
         sauceOptions.setCapability("build", Config.getBuildType() + " - " + Config.getBuildDate());
         sauceOptions.setCapability("name", testContext.getTestName());
         //sauceOptions.setCapability("cacheId", Config.getCacheId());
@@ -479,7 +479,7 @@ public class DriverManager {
 
         // Set other BrowserStack capabilities
         caps.setCapability("deviceOrientation", "landscape");
-        caps.setCapability("project", "Tiller POS");
+        caps.setCapability("project", "TF1+");
         caps.setCapability("build", Config.getBuildType());
         caps.setCapability("name", testContext.getTestName());
 
