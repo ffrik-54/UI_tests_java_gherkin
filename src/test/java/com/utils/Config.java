@@ -52,22 +52,19 @@ public class Config {
     public static final int DIMENSION_HEIGHT_FHD = 1080;
 
     @Getter
-    private static final String dataPath = "./res/data/Data.json";
+    private static final String dataPath = "./src/test/resources/global/Global.json";
+
+    private static final String stringPath = "./src/test/resources/global/Strings_XX.json";
 
     @Getter
-    private static final String dataBrowserstackPath = "./res/data/Data_browserstack.json";
+    private static final String dataApiPath = "./src/test/resources/global/Data_api.json";
 
-    private static final String stringPath = "./res/strings/Strings_XX.json";
+    private static final String dataAuthUrlTokenPath = "./src/test/resources/global/*/Data_api.json";
 
-    @Getter
-    private static final String dataApiPath = "./res/data/Data_api.json";
-
-    private static final String dataAuthUrlTokenPath = "./res/data/*/Data_api.json";
-
-    private static final String dataEnvPath = "./res/data/*/Data.json";
+    private static final String dataEnvPath = "./src/test/resources/global/*/Global.json";
 
     @Getter
-    private static final String dataStorePath = "./res/data/XX/*/Data.json";
+    private static final String dataAccountPath = "./src/test/resources/global/XX/*/Global.json";
 
     private static final String propertiesFile = "gradle.properties";
 

@@ -37,7 +37,7 @@ public class Hooks {
         testContext.getScenarioContext().setScenario(scenario);
         Config.loadGradleProperties();
         testContext.setWebTest(true);
-        Config.setWebUrl("https://www.tf1.fr");
+        Config.setWebUrl(Json.get("env_web_url").replace("PROTOCOL",Config.getProtocol()));
         testContext.getDriverManager().initializeDriver();
         Json.setTestContext(testContext);
         WebUI.setTestContext(testContext);
