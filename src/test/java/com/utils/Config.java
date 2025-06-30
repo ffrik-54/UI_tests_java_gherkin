@@ -263,7 +263,7 @@ public class Config {
                     return localProperties.getProperty(key);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Report.logError(e.getMessage());
             }
         }
 
@@ -274,7 +274,7 @@ public class Config {
                 return gradleProperties.getProperty(key);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Report.logError(e.getMessage());
         }
 
         return null;

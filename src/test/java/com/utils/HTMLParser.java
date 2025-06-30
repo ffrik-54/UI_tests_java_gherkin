@@ -23,7 +23,7 @@ public class HTMLParser {
         try {
             htmlFile = Jsoup.parse(new File(path), "UTF-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            Report.logError(e.getMessage());
         }
         return htmlFile;
     }
