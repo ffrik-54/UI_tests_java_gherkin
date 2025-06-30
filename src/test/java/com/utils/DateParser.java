@@ -2,7 +2,11 @@ package com.utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+/**
+ * Class for Date
+ *
+ * @author ffrik-54
+ */
 public class DateParser {
 
     private static final String defaultDatePattern = "yyyy/MM/dd HH:mm:ss";

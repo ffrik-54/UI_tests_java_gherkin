@@ -1,18 +1,19 @@
 package com.utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Java Program to parse/read HTML documents from File using Jsoup library. Jsoup is an open source library which allows
  * Java developer to parse HTML files and extract elements, manipulate data, change style using DOM, CSS and JQuery like
  * method.
  *
- * @author pierredesporte
+ * @author ffrik-54
  */
 public class HTMLParser {
 
@@ -22,7 +23,7 @@ public class HTMLParser {
         try {
             htmlFile = Jsoup.parse(new File(path), "UTF-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            Report.logError(e.getMessage());
         }
         return htmlFile;
     }

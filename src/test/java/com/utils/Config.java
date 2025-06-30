@@ -110,9 +110,6 @@ public class Config {
     private static String protocol = null; // http - https
 
     @Getter
-    private static String orderProvider = null;
-
-    @Getter
     private static String packageName = null; // package for Android or Bundle ID for Ios
 
     @Getter
@@ -155,8 +152,6 @@ public class Config {
 
     private static String buildDate = null; // Date of the build - null until date asked once
 
-    private static String cacheId = null; // used to identify all tests for same test suite - null until called asked
-
     private Config() {
         throw new IllegalStateException("Utility class");
     }
@@ -171,10 +166,6 @@ public class Config {
 
     public static boolean isHeadlessActivated() {
         return headless.equals("true");
-    }
-
-    public static void setOrderProvider(String path) {
-        orderProvider = path;
     }
 
     public static String getDataAuthUrlTokenPath() {
@@ -272,7 +263,7 @@ public class Config {
                     return localProperties.getProperty(key);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Report.logError(e.getMessage());
             }
         }
 
@@ -283,7 +274,7 @@ public class Config {
                 return gradleProperties.getProperty(key);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Report.logError(e.getMessage());
         }
 
         return null;

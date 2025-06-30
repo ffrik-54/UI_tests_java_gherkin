@@ -13,7 +13,7 @@ import software.amazon.awssdk.services.sqs.model.SqsException;
 /**
  * Utils for interaction with Amazon SQS
  *
- * @author pierredesporte
+ * @author ffrik-54
  */
 
 public class AwsSQSManager {
